@@ -1,4 +1,4 @@
-// Follow (tail -f) an io.Reader
+// Package follow provides a way to follow (tail -f) an io.Reader.
 //
 // This io.Reader will never return io.EOF until after a call to
 // Close(), instead it will block until more bytes are available.
@@ -14,12 +14,12 @@ type follower struct {
 	stopped bool
 }
 
-// Get a new follower for the given Reader.
+// New provides a new follower for the given Reader.
 func New(r io.Reader) io.ReadCloser {
 	return &follower{r: r}
 }
 
-// Stop following the stream
+// Close stops  following the stream
 func (f *follower) Close() error {
 	f.stopped = true
 	return nil
