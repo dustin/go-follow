@@ -9,9 +9,15 @@ import (
 	"time"
 )
 
+const (
+	minDelay = 100 * time.Millisecond
+	maxDelay = time.Second
+)
+
 type follower struct {
 	r       io.Reader
 	stopped bool
+	delay   time.Duration
 }
 
 // New provides a new follower for the given Reader.
@@ -19,10 +25,17 @@ func New(r io.Reader) io.ReadCloser {
 	return &follower{r: r}
 }
 
-// Close stops  following the stream
+// Close stops following the stream.
 func (f *follower) Close() error {
 	f.stopped = true
 	return nil
+}
+
+func min(a, b time.Duration) time.Duration {
+	if a > b {
+		return b
+	}
+	return a
 }
 
 // Read into the buffer.  Block on EOF.
@@ -31,8 +44,10 @@ func (f *follower) Read(b []byte) (n int, err error) {
 		n, err = f.r.Read(b)
 		// Got data
 		if err == io.EOF {
-			time.Sleep(time.Millisecond * 100)
+			time.Sleep(f.delay)
+			f.delay = min(maxDelay, f.delay*2)
 		} else {
+			f.delay = minDelay
 			return
 		}
 	}

@@ -75,3 +75,20 @@ func TestFileTail(t *testing.T) {
 			fileSize, bytesRead)
 	}
 }
+
+func TestMin(t *testing.T) {
+	tests := []struct {
+		a, b, exp time.Duration
+	}{
+		{0, 0, 0},
+		{0, 100, 0},
+		{200, 100, 100},
+	}
+
+	for _, test := range tests {
+		got := min(test.a, test.b)
+		if got != test.exp {
+			t.Errorf("min(%v, %v) = %v, want %v", test.a, test.b, got, test.exp)
+		}
+	}
+}
