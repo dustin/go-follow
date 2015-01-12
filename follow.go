@@ -22,7 +22,7 @@ type follower struct {
 
 // New provides a new follower for the given Reader.
 func New(r io.Reader) io.ReadCloser {
-	return &follower{r: r}
+	return &follower{r: r, delay: minDelay}
 }
 
 // Close stops following the stream.
