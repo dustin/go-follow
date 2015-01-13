@@ -39,7 +39,7 @@ func read(t *testing.T, fn string, ch chan<- int) {
 }
 
 func TestFileTail(t *testing.T) {
-	fn := ",thefile"
+	fn := os.TempDir() + "/,thefile"
 	defer os.Remove(fn)
 
 	f, err := os.OpenFile(fn, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0666)
